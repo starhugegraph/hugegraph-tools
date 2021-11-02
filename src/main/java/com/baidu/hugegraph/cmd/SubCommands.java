@@ -64,8 +64,10 @@ public class SubCommands {
         this.commands.put("graph-get", new GraphGet());
         this.commands.put("graph-clear", new GraphClear());
         this.commands.put("graph-drop", new GraphDrop());
+        this.commands.put("graph-reload", new GraphReload());
         this.commands.put("graph-mode-set", new GraphModeSet());
         this.commands.put("graph-mode-get", new GraphModeGet());
+        this.commands.put("graphs-reload", new GraphsReload());
 
         this.commands.put("task-list", new TaskList());
         this.commands.put("task-get", new TaskGet());
@@ -420,6 +422,12 @@ public class SubCommands {
         }
     }
 
+    @Parameters(commandDescription = "Reload graph")
+    public static class GraphReload {}
+
+    @Parameters(commandDescription = "Reload all graphs")
+    public static class GraphsReload {}
+
     @Parameters(commandDescription = "Set graph mode")
     public static class GraphModeSet {
 
@@ -534,8 +542,16 @@ public class SubCommands {
         @ParametersDelegate
         private TaskId taskId = new TaskId();
 
+        @Parameter(names = "--force",
+                   description = "Force to delete task")
+        private boolean force = false;
+
         public long taskId() {
             return this.taskId.taskId;
+        }
+
+        public boolean force() {
+            return this.force;
         }
     }
 

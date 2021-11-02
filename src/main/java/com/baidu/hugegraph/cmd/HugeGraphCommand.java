@@ -304,6 +304,22 @@ public class HugeGraphCommand {
                 graphsManager.drop(this.graph(), graphDrop.confirmMessage());
                 Printer.print("Graph '%s' is dropped", this.graph());
                 break;
+            case "graph-reload":
+                if (timeout() < DEFAULT_GRAPH_CLEAR_TIMEOUT) {
+                    this.timeout(DEFAULT_GRAPH_CLEAR_TIMEOUT);
+                }
+                graphsManager = manager(GraphsManager.class);
+                graphsManager.reload(this.graph());
+                Printer.print("Graph '%s' is reloaded", this.graph());
+                break;
+            case "graphs-reload":
+                if (timeout() < DEFAULT_GRAPH_CLEAR_TIMEOUT) {
+                    this.timeout(DEFAULT_GRAPH_CLEAR_TIMEOUT);
+                }
+                graphsManager = manager(GraphsManager.class);
+                graphsManager.reload();
+                Printer.print("Graphs are reloaded", this.graph());
+                break;
             case "graph-mode-set":
                 SubCommands.GraphModeSet graphModeSet = this.subCommand(subCmd);
                 graphsManager = manager(GraphsManager.class);
@@ -355,7 +371,7 @@ public class HugeGraphCommand {
             case "task-delete":
                 SubCommands.TaskDelete taskDelete = this.subCommand(subCmd);
                 tasksManager = manager(TasksManager.class);
-                tasksManager.delete(taskDelete.taskId());
+                tasksManager.delete(taskDelete.taskId(), taskDelete.force());
                 Printer.print("Task '%s' is deleted", taskDelete.taskId());
                 break;
             case "task-cancel":

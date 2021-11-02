@@ -57,7 +57,11 @@ public class TasksManager extends ToolManager {
     }
 
     public void delete(long taskId) {
-        this.client.tasks().delete(taskId);
+        this.delete(taskId, false);
+    }
+
+    public void delete(long taskId, boolean force) {
+        this.client.tasks().delete(taskId, force);
     }
 
     public void cancel(long taskId) {

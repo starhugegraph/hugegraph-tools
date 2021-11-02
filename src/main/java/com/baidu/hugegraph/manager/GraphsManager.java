@@ -52,6 +52,14 @@ public class GraphsManager extends ToolManager {
         this.client.graphs().remove(graph, confirmMessage);
     }
 
+    public void reload(String graph) {
+        this.client.graphs().reload(graph);
+    }
+
+    public void reload() {
+        this.client.graphs().reload();
+    }
+
     public void mode(String graph, GraphMode mode) {
         this.client.graphs().mode(graph, mode);
     }
