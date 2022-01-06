@@ -26,7 +26,7 @@ public class AuthTest {
     public static final String USER_NAME = "admin";
     public static final String USER_PASSWORD = "123456";
     public static final String URL = "http://127.0.0.1:8080";
-    public static final String GRAPH_SPACE = "DEFAULT";
+    public static final String GRAPHSPACE = "DEFAULT";
     public static final String GRAPH = "hugegraph";
     public static final Integer TIME_OUT = 30;
     public static final String TRUST_STORE_FILE = "";

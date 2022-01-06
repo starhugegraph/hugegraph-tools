@@ -68,6 +68,9 @@ public class HugeGraphCommand {
     private SubCommands.Url url = new SubCommands.Url();
 
     @ParametersDelegate
+    private SubCommands.MetaInfo metaInfo = new SubCommands.MetaInfo();
+
+    @ParametersDelegate
     private SubCommands.Graph graph = new SubCommands.Graph();
 
     @ParametersDelegate
@@ -115,12 +118,36 @@ public class HugeGraphCommand {
         this.url.url = url;
     }
 
+    public String metaType() {
+        return this.metaInfo.metaType;
+    }
+
+    public void metaType(String metaType) {
+        this.metaInfo.metaType = metaType;
+    }
+
+    public List<String> metaURLs() {
+        return metaInfo.metaURLs;
+    }
+
+    public void metaURLs(List<String> urls) {
+        metaInfo.metaURLs = urls;
+    }
+
+    public String cluster() {
+        return this.graph.cluster;
+    }
+
+    public void cluster(String cluster) {
+        this.graph.cluster = cluster;
+    }
+
     public String graphSpace() {
-        return this.graphSpace.graphSpace;
+        return this.graph.graphSpace;
     }
 
     public void graphSpace(String graphSpace) {
-        this.graphSpace.graphSpace = graphSpace;
+        this.graph.graphSpace = graphSpace;
     }
 
     public String graph() {
@@ -193,7 +220,7 @@ public class HugeGraphCommand {
         JCommander jCommander = builder.build();
         jCommander.setProgramName("hugegraph");
         jCommander.setCaseSensitiveOptions(true);
-        jCommander.setAllowAbbreviatedOptions(true);
+        jCommander.setAllowAbbreviatedOptions(false);
         return jCommander;
     }
 
@@ -448,14 +475,30 @@ public class HugeGraphCommand {
 
     private <T extends ToolManager> T manager(Class<T> clz) {
         try {
-            ConnectionInfo info = new ConnectionInfo(this.url(),
-                                                     this.graphSpace(),
-                                                     this.graph(),
-                                                     this.username(),
-                                                     this.password(),
-                                                     this.timeout(),
-                                                     this.trustStoreFile(),
-                                                     this.trustStorePassword());
+            ConnectionInfo info = null;
+            if (StringUtils.isNotEmpty(this.url())) {
+                info = new ConnectionInfo(this.url(),
+                                          this.graphSpace(),
+                                          this.graph(),
+                                          this.username(),
+                                          this.password(),
+                                          this.timeout(),
+                                          this.trustStoreFile(),
+                                          this.trustStorePassword());
+            } else {
+                info = new ConnectionInfo(this.metaInfo.metaType,
+                                          this.metaInfo.metaURLs,
+                                          this.metaInfo.metaCa,
+                                          this.metaInfo.metaClientCa,
+                                          this.metaInfo.metaClientKey,
+                                          this.cluster(),
+                                          this.graphSpace(),
+                                          this.graph(),
+                                          this.username(),
+                                          this.password(),
+                                          this.timeout()
+                );
+            }
             T toolManager = clz.getConstructor(ToolClient.ConnectionInfo.class)
                                .newInstance(info);
             this.taskManagers.add(toolManager);

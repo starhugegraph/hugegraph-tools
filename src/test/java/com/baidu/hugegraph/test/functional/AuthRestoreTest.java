@@ -46,7 +46,7 @@ public class AuthRestoreTest extends AuthTest {
 
     @Before
     public void init() {
-        client = HugeClient.builder(URL, GRAPH_SPACE, GRAPH)
+        client = HugeClient.builder(URL, GRAPHSPACE, GRAPH)
                            .configUser(USER_NAME, USER_PASSWORD)
                            .configTimeout(TIME_OUT)
                            .configSSL(TRUST_STORE_FILE, TRUST_STORE_PASSWORD)

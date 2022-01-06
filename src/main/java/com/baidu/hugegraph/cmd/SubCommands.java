@@ -673,7 +673,31 @@ public class SubCommands {
         @Parameter(names = {"--url"}, arity = 1,
                    validateWith = {UrlValidator.class},
                    description = "The URL of HugeGraph-Server")
-        public String url = "http://127.0.0.1:8080";
+        public String url = "";
+    }
+    public static class MetaInfo {
+
+        @Parameter(names = {"--meta-type"}, arity = 1,
+                description = "type of meta")
+        public String metaType = "etcd";
+
+        @Parameter(names = {"--meta-urls"}, required = false,
+                converter = StringListConverter.class,
+                description = "The meta url")
+        public List<String> metaURLs = Arrays.asList(new String[]{"http" +
+                "://127.0.0.1:2379"});
+
+        @Parameter(names = {"--meta-ca"}, required = false, arity = 1,
+                description = "meta ca file")
+        public String metaCa;
+
+        @Parameter(names = {"--meta-client-ca"}, required = false, arity = 1,
+                description = "meta client ca file")
+        public String metaClientCa;
+
+        @Parameter(names = {"--meta-client-key"}, required = false, arity = 1,
+                description = "meta client key file (pkcs8)")
+        public String metaClientKey;
     }
 
     public static class GraphSpace {
@@ -685,9 +709,17 @@ public class SubCommands {
 
     public static class Graph {
 
+        @Parameter(names = {"--cluster"}, arity = 1,
+                description = "Cluster of graph")
+        public String cluster = "hg";
+
+        @Parameter(names = {"--graphspace"}, arity = 1,
+                description = "Space of graph")
+        public String graphSpace = "DEFAULT";
+
         @Parameter(names = {"--graph"}, arity = 1,
                    description = "Name of graph")
-        public String graph = "hugegraph";
+        public String graph;
     }
 
     public static class Username {
@@ -1000,6 +1032,15 @@ public class SubCommands {
                                  "'user' and 'group'. If type contains 'access' " +
                                  "then should contains 'group' and 'target'.")
         public List<HugeType> types = AuthHugeTypeConverter.AUTH_ALL_TYPES;
+    }
+
+    public static class StringListConverter
+            implements IStringConverter<List<String>> {
+
+        @Override
+        public List<String> convert(String s) {
+            return Arrays.asList(s.split(","));
+        }
     }
 
     public static class GraphModeConverter
