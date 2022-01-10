@@ -692,6 +692,13 @@ public class SubCommands {
         public String url = "http://127.0.0.1:8080";
     }
 
+    public static class GraphSpace {
+
+        @Parameter(names = {"--graphspace"}, arity = 1,
+                description = "Name of graphspace")
+        public String graphSpace = "DEFAULT";
+    }
+
     public static class Graph {
 
         @Parameter(names = {"--graph"}, arity = 1,

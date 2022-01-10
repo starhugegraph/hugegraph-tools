@@ -71,6 +71,9 @@ public class HugeGraphCommand {
     private SubCommands.Graph graph = new SubCommands.Graph();
 
     @ParametersDelegate
+    private SubCommands.GraphSpace graphSpace = new SubCommands.GraphSpace();
+
+    @ParametersDelegate
     private SubCommands.Username username = new SubCommands.Username();
 
     @ParametersDelegate
@@ -110,6 +113,10 @@ public class HugeGraphCommand {
 
     private void url(String url) {
         this.url.url = url;
+    }
+
+    public String graphSpace() {
+        return this.graphSpace.graphSpace;
     }
 
     public String graph() {
@@ -424,7 +431,9 @@ public class HugeGraphCommand {
 
     private <T extends ToolManager> T manager(Class<T> clz) {
         try {
-            ConnectionInfo info = new ConnectionInfo(this.url(), this.graph(),
+            ConnectionInfo info = new ConnectionInfo(this.url(),
+                                                     this.graphSpace(),
+                                                     this.graph(),
                                                      this.username(),
                                                      this.password(),
                                                      this.timeout(),
