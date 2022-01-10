@@ -69,7 +69,7 @@ public class ToolClient {
             trustStoreFile = info.trustStoreFile;
             trustStorePassword = info.trustStorePassword;
         }
-        this.client = HugeClient.builder(info.url, info.graph)
+        this.client = HugeClient.builder(info.url, info.graphSpace, info.graph)
                                 .configUser(info.username, info.password)
                                 .configTimeout(info.timeout)
                                 .configSSL(trustStoreFile, trustStorePassword)
@@ -127,6 +127,7 @@ public class ToolClient {
     public static class ConnectionInfo {
 
         private String url;
+        private String graphSpace;
         private String graph;
         private String username;
         private String password;
@@ -134,12 +135,13 @@ public class ToolClient {
         private String trustStoreFile;
         private String trustStorePassword;
 
-        public ConnectionInfo(String url, String graph,
-                              String username, String password,
-                              Integer timeout,
+        public ConnectionInfo(String url, String graphSpace,
+                              String graph, String username,
+                              String password, Integer timeout,
                               String trustStoreFile,
                               String trustStorePassword) {
             this.url = url;
+            this.graphSpace = graphSpace;
             this.graph = graph;
             this.username = username;
             this.password = password;
