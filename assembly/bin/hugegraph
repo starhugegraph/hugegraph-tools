@@ -2,6 +2,7 @@
 
 # Set environment here if needed
 #export HUGEGRAPH_URL=
+#export HUGEGRAPH_GRAPHSPACE=
 #export HUGEGRAPH_GRAPH=
 #export HUGEGRAPH_USERNAME=
 #export HUGEGRAPH_PASSWORD=
@@ -66,6 +67,13 @@ else
     URL_ARG=""
 fi
 
+echo $* | grep "\--space " > /dev/null 2>&1
+if [ $? -ne 0 -a -n "$HUGEGRAPH_GRAPHSPACE" ]; then
+    GRAPHSPACE_ARG="--space $HUGEGRAPH_GRAPHSPACE"
+else
+    GRAPHSPACE_ARG=""
+fi
+
 echo $* | grep "\--graph " > /dev/null 2>&1
 if [ $? -ne 0 -a -n "$HUGEGRAPH_GRAPH" ]; then
     GRAPH_ARG="--graph $HUGEGRAPH_GRAPH"
@@ -127,5 +135,7 @@ if [ "$JAVA_OPTIONS" = "" ] ; then
     JAVA_OPTIONS="-Xms${MIN_MEM}m -Xmx${XMX}m"
 fi
 
+echo $URL_ARG $GRAPHSPACE_ARG $GRAPH_ARG $USER_ARG $PASSWORD_ARG $TIMEOUT_ARG $TRUST_STORE_FILE_ARG $TRUST_STORE_PASSWORD_ARG "$@"
+
 exec $JAVA -Dtools.home.path=${TOP} $JAVA_OPTIONS -cp $LIB/hugegraph-tools-*.jar -Djava.ext.dirs=$LIB/ \
-com.baidu.hugegraph.cmd.HugeGraphCommand $URL_ARG $GRAPH_ARG $USER_ARG $PASSWORD_ARG $TIMEOUT_ARG $TRUST_STORE_FILE_ARG $TRUST_STORE_PASSWORD_ARG "$@"
+com.baidu.hugegraph.cmd.HugeGraphCommand $URL_ARG $GRAPHSPACE_ARG $GRAPH_ARG $USER_ARG $PASSWORD_ARG $TIMEOUT_ARG $TRUST_STORE_FILE_ARG $TRUST_STORE_PASSWORD_ARG "$@"

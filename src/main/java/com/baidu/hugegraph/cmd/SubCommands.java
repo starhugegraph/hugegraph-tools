@@ -401,26 +401,10 @@ public class SubCommands {
     public static class GraphGet {}
 
     @Parameters(commandDescription = "Clear graph schema and data")
-    public static class GraphClear {
-
-        @ParametersDelegate
-        private ClearConfirmMessage message = new ClearConfirmMessage();
-
-        public String confirmMessage() {
-            return this.message.confirmMessage;
-        }
-    }
+    public static class GraphClear {}
 
     @Parameters(commandDescription = "Drop graph")
-    public static class GraphDrop {
-
-        @ParametersDelegate
-        private DropConfirmMessage message = new DropConfirmMessage();
-
-        public String confirmMessage() {
-            return this.message.confirmMessage;
-        }
-    }
+    public static class GraphDrop {}
 
     @Parameters(commandDescription = "Reload graph")
     public static class GraphReload {}
@@ -694,8 +678,8 @@ public class SubCommands {
 
     public static class GraphSpace {
 
-        @Parameter(names = {"--graphspace"}, arity = 1,
-                description = "Name of graphspace")
+        @Parameter(names = {"--space"}, arity = 1,
+                description = "Name of graph space")
         public String graphSpace = "DEFAULT";
     }
 

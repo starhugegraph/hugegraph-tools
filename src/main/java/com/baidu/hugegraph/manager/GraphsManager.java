@@ -44,12 +44,12 @@ public class GraphsManager extends ToolManager {
         return this.client.graphs().getGraph(graph);
     }
 
-    public void clear(String graph, String confirmMessage) {
-        this.client.graphs().clear(graph, confirmMessage);
+    public void clear(String graph) {
+        this.client.graphs().clear(graph);
     }
 
-    public void drop(String graph, String confirmMessage) {
-        this.client.graphs().remove(graph, confirmMessage);
+    public void drop(String graph) {
+        this.client.graphs().remove(graph);
     }
 
     public void reload(String graph) {
