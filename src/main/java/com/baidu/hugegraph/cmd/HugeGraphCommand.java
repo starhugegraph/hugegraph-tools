@@ -311,7 +311,6 @@ public class HugeGraphCommand {
                               this.graphSpace(), this.graph());
                 break;
             case "graph-drop":
-                SubCommands.GraphDrop graphDrop = this.subCommand(subCmd);
                 if (timeout() < DEFAULT_GRAPH_CLEAR_TIMEOUT) {
                     this.timeout(DEFAULT_GRAPH_CLEAR_TIMEOUT);
                 }
