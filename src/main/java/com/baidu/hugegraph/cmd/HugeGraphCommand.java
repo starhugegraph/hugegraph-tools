@@ -294,21 +294,19 @@ public class HugeGraphCommand {
                                  graphsManager.get(this.graph()));
                 break;
             case "graph-clear":
-                SubCommands.GraphClear graphClear = this.subCommand(subCmd);
                 if (timeout() < DEFAULT_GRAPH_CLEAR_TIMEOUT) {
                     this.timeout(DEFAULT_GRAPH_CLEAR_TIMEOUT);
                 }
                 graphsManager = manager(GraphsManager.class);
-                graphsManager.clear(this.graph(), graphClear.confirmMessage());
+                graphsManager.clear(this.graph());
                 Printer.print("Graph '%s' is cleared", this.graph());
                 break;
             case "graph-drop":
-                SubCommands.GraphDrop graphDrop = this.subCommand(subCmd);
                 if (timeout() < DEFAULT_GRAPH_CLEAR_TIMEOUT) {
                     this.timeout(DEFAULT_GRAPH_CLEAR_TIMEOUT);
                 }
                 graphsManager = manager(GraphsManager.class);
-                graphsManager.drop(this.graph(), graphDrop.confirmMessage());
+                graphsManager.drop(this.graph());
                 Printer.print("Graph '%s' is dropped", this.graph());
                 break;
             case "graph-reload":
