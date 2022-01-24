@@ -119,6 +119,10 @@ public class HugeGraphCommand {
         return this.graphSpace.graphSpace;
     }
 
+    public void graphSpace(String graphSpace) {
+        this.graphSpace.graphSpace = graphSpace;
+    }
+
     public String graph() {
         return this.graph.graph;
     }
@@ -200,7 +204,8 @@ public class HugeGraphCommand {
                 if (this.timeout() < BACKUP_DEFAULT_TIMEOUT) {
                     this.timeout(BACKUP_DEFAULT_TIMEOUT);
                 }
-                Printer.print("Graph '%s' start backup!", this.graph());
+                Printer.print("[%s] Graph '%s' start backup!",
+                              this.graphSpace(), this.graph());
                 SubCommands.Backup backup = this.subCommand(subCmd);
                 BackupManager backupManager = manager(BackupManager.class);
 
@@ -211,10 +216,10 @@ public class HugeGraphCommand {
                 GraphsManager graphsManager = manager(GraphsManager.class);
                 GraphMode mode = graphsManager.mode(this.graph());
                 E.checkState(mode.maintaining(),
-                             "Invalid mode '%s' of graph '%s' for restore " +
-                             "sub-command", mode, this.graph());
-                Printer.print("Graph '%s' start restore in mode '%s'!",
-                              this.graph(), mode);
+                             "[%s] Invalid mode '%s' of graph '%s' for restore sub-command",
+                             this.graphSpace(), mode, this.graph());
+                Printer.print("[%s] Graph '%s' start restore in mode '%s'!",
+                              this.graphSpace(), this.graph(), mode);
                 SubCommands.Restore restore = this.subCommand(subCmd);
                 RestoreManager restoreManager = manager(RestoreManager.class);
 
@@ -224,8 +229,8 @@ public class HugeGraphCommand {
                 break;
             case "migrate":
                 SubCommands.Migrate migrate = this.subCommand(subCmd);
-                Printer.print("Migrate graph '%s' from '%s' to '%s' as '%s'",
-                              this.graph(), this.url(),
+                Printer.print("[%s] Migrate graph '%s' from '%s' to '%s' as '%s'",
+                              this.graphSpace(), this.graph(), this.url(),
                               migrate.targetUrl(), migrate.targetGraph());
 
                 // Backup source graph
@@ -250,12 +255,12 @@ public class HugeGraphCommand {
                 // Set target graph mode
                 mode = migrate.mode();
                 E.checkState(mode.maintaining(),
-                             "Invalid mode '%s' of graph '%s' for restore",
-                             mode, migrate.targetGraph());
+                             "[%s] Invalid mode '%s' of graph '%s' for restore",
+                             this.graphSpace(), mode, migrate.targetGraph());
                 graphsManager.mode(migrate.targetGraph(), mode);
                 // Restore
-                Printer.print("Graph '%s' start restore in mode '%s'!",
-                              migrate.targetGraph(), migrate.mode());
+                Printer.print("[%s] Graph '%s' start restore in mode '%s'!",
+                              this.graphSpace(), migrate.targetGraph(), migrate.mode());
                 String directory = backupManager.directory().directory();
                 restore = convMigrate2Restore(migrate, directory);
                 restoreManager = manager(RestoreManager.class);
@@ -267,7 +272,8 @@ public class HugeGraphCommand {
                 graphsManager.mode(migrate.targetGraph(), origin);
                 break;
             case "dump":
-                Printer.print("Graph '%s' start dump!", this.graph());
+                Printer.print("[%s] Graph '%s' start dump!",
+                              this.graphSpace(), this.graph());
                 SubCommands.DumpGraph dump = this.subCommand(subCmd);
                 DumpGraphManager dumpManager = manager(DumpGraphManager.class);
 
@@ -282,15 +288,17 @@ public class HugeGraphCommand {
                 }
                 graphsManager = manager(GraphsManager.class);
                 graphsManager.create(graphCreate.name(), graphCreate.config());
-                Printer.print("Graph '%s' is created", this.graph());
+                Printer.print("[%s] Graph '%s' is created",
+                              this.graphSpace(), this.graph());
                 break;
             case "graph-list":
                 graphsManager = manager(GraphsManager.class);
-                Printer.printList("Graphs", graphsManager.list());
+                Printer.printList(String.format("[%s] Graphs", this.graphSpace()),
+                                  graphsManager.list());
                 break;
             case "graph-get":
                 graphsManager = manager(GraphsManager.class);
-                Printer.printMap("Graph info",
+                Printer.printMap(String.format("[%s] Graph info", this.graphSpace()),
                                  graphsManager.get(this.graph()));
                 break;
             case "graph-clear":
@@ -299,7 +307,8 @@ public class HugeGraphCommand {
                 }
                 graphsManager = manager(GraphsManager.class);
                 graphsManager.clear(this.graph());
-                Printer.print("Graph '%s' is cleared", this.graph());
+                Printer.print("[%s] Graph '%s' is cleared",
+                              this.graphSpace(), this.graph());
                 break;
             case "graph-drop":
                 if (timeout() < DEFAULT_GRAPH_CLEAR_TIMEOUT) {
@@ -307,7 +316,8 @@ public class HugeGraphCommand {
                 }
                 graphsManager = manager(GraphsManager.class);
                 graphsManager.drop(this.graph());
-                Printer.print("Graph '%s' is dropped", this.graph());
+                Printer.print("[%s] Graph '%s' is dropped",
+                              this.graphSpace(), this.graph());
                 break;
             case "graph-reload":
                 if (timeout() < DEFAULT_GRAPH_CLEAR_TIMEOUT) {
@@ -315,7 +325,8 @@ public class HugeGraphCommand {
                 }
                 graphsManager = manager(GraphsManager.class);
                 graphsManager.reload(this.graph());
-                Printer.print("Graph '%s' is reloaded", this.graph());
+                Printer.print("[%s] Graph '%s' is reloaded",
+                              this.graphSpace(), this.graph());
                 break;
             case "graphs-reload":
                 if (timeout() < DEFAULT_GRAPH_CLEAR_TIMEOUT) {
@@ -323,23 +334,25 @@ public class HugeGraphCommand {
                 }
                 graphsManager = manager(GraphsManager.class);
                 graphsManager.reload();
-                Printer.print("Graphs are reloaded", this.graph());
+                Printer.print("[%s] Graphs are reloaded",
+                              this.graphSpace(), this.graph());
                 break;
             case "graph-mode-set":
                 SubCommands.GraphModeSet graphModeSet = this.subCommand(subCmd);
                 graphsManager = manager(GraphsManager.class);
                 graphsManager.mode(this.graph(), graphModeSet.mode());
-                Printer.print("Set graph '%s' mode to '%s'",
-                              this.graph(), graphModeSet.mode());
+                Printer.print("[%s] Set graph '%s' mode to '%s'",
+                              this.graphSpace(), this.graph(), graphModeSet.mode());
                 break;
             case "graph-mode-get":
                 graphsManager = manager(GraphsManager.class);
-                Printer.printKV("Graph mode", graphsManager.mode(this.graph()));
+                Printer.printKV(String.format("[%s] Graph mode", this.graphSpace()),
+                                graphsManager.mode(this.graph()));
                 break;
             case "gremlin-execute":
                 SubCommands.Gremlin gremlin = this.subCommand(subCmd);
                 GremlinManager gremlinManager = manager(GremlinManager.class);
-                Printer.print("Run gremlin script");
+                Printer.print("[%s] Run gremlin script", this.graphSpace());
                 ResultSet result = gremlinManager.execute(gremlin.script(),
                                                           gremlin.bindings(),
                                                           gremlin.language(),
@@ -352,11 +365,13 @@ public class HugeGraphCommand {
             case "gremlin-schedule":
                 SubCommands.GremlinJob job = this.subCommand(subCmd);
                 gremlinManager = manager(GremlinManager.class);
-                Printer.print("Run gremlin script as async job");
+                Printer.print("[%s] Run gremlin script as async job",
+                              this.graphSpace());
                 long taskId = gremlinManager.executeAsTask(job.script(),
                                                            job.bindings(),
                                                            job.language());
-                Printer.printKV("Task id", taskId);
+                Printer.printKV(String.format("[%s] Task id",
+                                              this.graphSpace()), taskId);
                 break;
             case "task-list":
                 SubCommands.TaskList taskList = this.subCommand(subCmd);
@@ -365,35 +380,39 @@ public class HugeGraphCommand {
                                                      taskList.limit());
                 List<Object> results = tasks.stream().map(Task::asMap)
                                             .collect(Collectors.toList());
-                Printer.printList("Tasks", results);
+                Printer.printList(String.format("[%s] Tasks",
+                                                this.graphSpace()), results);
                 break;
             case "task-get":
                 SubCommands.TaskGet taskGet = this.subCommand(subCmd);
                 tasksManager = manager(TasksManager.class);
-                Printer.printKV("Task info",
+                Printer.printKV(String.format("[%s] Task info",
+                                this.graphSpace()),
                                 tasksManager.get(taskGet.taskId()).asMap());
                 break;
             case "task-delete":
                 SubCommands.TaskDelete taskDelete = this.subCommand(subCmd);
                 tasksManager = manager(TasksManager.class);
                 tasksManager.delete(taskDelete.taskId(), taskDelete.force());
-                Printer.print("Task '%s' is deleted", taskDelete.taskId());
+                Printer.print("[%s] Task '%s' is deleted",
+                              this.graphSpace(), taskDelete.taskId());
                 break;
             case "task-cancel":
                 SubCommands.TaskCancel taskCancel = this.subCommand(subCmd);
                 tasksManager = manager(TasksManager.class);
                 tasksManager.cancel(taskCancel.taskId());
-                Printer.print("Task '%s' is cancelled", taskCancel.taskId());
+                Printer.print("[%s] Task '%s' is cancelled",
+                              this.graphSpace(), taskCancel.taskId());
                 break;
             case "task-clear":
                 SubCommands.TaskClear taskClear = this.subCommand(subCmd);
                 tasksManager = manager(TasksManager.class);
                 tasksManager.clear(taskClear.force());
-                Printer.print("Tasks are cleared[force=%s]",
-                              taskClear.force());
+                Printer.print("[%s] Tasks are cleared[force=%s]",
+                              this.graphSpace(), taskClear.force());
                 break;
             case "auth-backup":
-                Printer.print("Auth backup start...");
+                Printer.print("[%s] Auth backup start...", this.graphSpace());
                 SubCommands.AuthBackup authBackup = this.subCommand(subCmd);
                 AuthBackupRestoreManager authBackupManager = manager(AuthBackupRestoreManager.class);
 
@@ -401,7 +420,7 @@ public class HugeGraphCommand {
                 authBackupManager.backup(authBackup.types());
                 break;
             case "auth-restore":
-                Printer.print("Auth restore start...");
+                Printer.print("[%s] Auth restore start...", this.graphSpace());
                 SubCommands.AuthRestore authRestore = this.subCommand(subCmd);
                 AuthBackupRestoreManager authRestoreManager = manager(AuthBackupRestoreManager.class);
 

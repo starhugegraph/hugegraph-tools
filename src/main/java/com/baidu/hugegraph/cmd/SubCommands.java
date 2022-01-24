@@ -678,8 +678,8 @@ public class SubCommands {
 
     public static class GraphSpace {
 
-        @Parameter(names = {"--graphspace"}, arity = 1,
-                description = "Name of graphspace")
+        @Parameter(names = {"--space"}, arity = 1,
+                description = "Name of graph space")
         public String graphSpace = "DEFAULT";
     }
 
