@@ -427,10 +427,6 @@ public class AuthBackupRestoreManager extends BackupRestoreBaseManager {
                                         restoreTarget.graph())) {
                     conflict++;
                 }
-                if (!StringUtils.equals(existTarget.url(),
-                                        restoreTarget.url())) {
-                    conflict++;
-                }
                 if (conflict > NO_CONFLICT) {
                     E.checkState(strategy.isStopStrategy() ||
                                  strategy.isIgnoreStrategy(),
