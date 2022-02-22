@@ -506,13 +506,7 @@ public class HugeGraphCommand {
         } catch (Exception e) {
             throw new RuntimeException(String.format(
                       "Construct manager failed for class '%s', please make " +
-                      "sure global arguments set correctly: " +
-                      "--url=%s,--graph=%s,--user=%s,--password=%s," +
-                      "--timeout=%s,--trust-store-file=%s," +
-                      "--trust-store-password=%s", clz.getSimpleName(),
-                      this.url(), this.graph(), this.username(),
-                      this.password(), this.timeout(),
-                      this.trustStoreFile(), this.trustStorePassword()), e);
+                      "sure global arguments set correctly", clz.getSimpleName()), e);
         }
     }
 
