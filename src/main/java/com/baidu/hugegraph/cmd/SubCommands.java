@@ -682,7 +682,7 @@ public class SubCommands {
         public String metaType = "etcd";
 
         @Parameter(names = {"--meta-urls"}, required = false,
-                converter = StringListConverter.class,
+                listConverter = StringListConverter.class,
                 description = "The meta url")
         public List<String> metaURLs = Arrays.asList(new String[]{"http" +
                 "://127.0.0.1:2379"});
