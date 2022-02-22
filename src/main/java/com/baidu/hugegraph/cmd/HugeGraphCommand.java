@@ -74,9 +74,6 @@ public class HugeGraphCommand {
     private SubCommands.Graph graph = new SubCommands.Graph();
 
     @ParametersDelegate
-    private SubCommands.GraphSpace graphSpace = new SubCommands.GraphSpace();
-
-    @ParametersDelegate
     private SubCommands.Username username = new SubCommands.Username();
 
     @ParametersDelegate

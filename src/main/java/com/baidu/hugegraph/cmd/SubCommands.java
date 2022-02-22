@@ -700,21 +700,14 @@ public class SubCommands {
         public String metaClientKey;
     }
 
-    public static class GraphSpace {
-
-        @Parameter(names = {"--space"}, arity = 1,
-                description = "Name of graph space")
-        public String graphSpace = "DEFAULT";
-    }
-
     public static class Graph {
 
         @Parameter(names = {"--cluster"}, arity = 1,
                 description = "Cluster of graph")
         public String cluster = "hg";
 
-        @Parameter(names = {"--graphspace"}, arity = 1,
-                description = "Space of graph")
+        @Parameter(names = {"--space"}, arity = 1,
+                description = "Name of graph space")
         public String graphSpace = "DEFAULT";
 
         @Parameter(names = {"--graph"}, arity = 1,
