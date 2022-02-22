@@ -20,8 +20,11 @@
 package com.baidu.hugegraph.base;
 
 import java.nio.file.Paths;
+import java.util.List;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.baidu.hugegraph.driver.AuthManager;
 import com.baidu.hugegraph.driver.GraphManager;
@@ -31,7 +34,7 @@ import com.baidu.hugegraph.driver.SchemaManager;
 import com.baidu.hugegraph.driver.TaskManager;
 import com.baidu.hugegraph.driver.TraverserManager;
 import com.baidu.hugegraph.util.E;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.baidu.hugegraph.driver.factory.MetaHugeClientFactory;
 
 public class ToolClient {
 
@@ -47,35 +50,65 @@ public class ToolClient {
             info.username = "";
             info.password = "";
         }
-        String trustStoreFile, trustStorePassword;
-        if (info.url.startsWith("https")) {
-            if (info.trustStoreFile == null || info.trustStoreFile.isEmpty()) {
-                trustStoreFile = Paths.get(homePath(), DEFAULT_TRUST_STORE_FILE)
-                                      .toString();
-                trustStorePassword = DEFAULT_TRUST_STORE_PASSWORD;
+
+        if (StringUtils.isNotEmpty(info.url)) {
+            String trustStoreFile;
+            String trustStorePassword;
+            if (info.url.startsWith("https")) {
+                if (info.trustStoreFile == null || info.trustStoreFile.isEmpty()) {
+                    trustStoreFile = Paths.get(homePath(),
+                                               DEFAULT_TRUST_STORE_FILE)
+                                          .toString();
+                    trustStorePassword = DEFAULT_TRUST_STORE_PASSWORD;
+                } else {
+                    E.checkArgumentNotNull(info.trustStorePassword,
+                                           "The trust store password can't be " +
+                                                   "null when use https");
+                    trustStoreFile = info.trustStoreFile;
+                    trustStorePassword = info.trustStorePassword;
+                }
             } else {
-                E.checkArgumentNotNull(info.trustStorePassword,
-                                       "The trust store password can't be " +
-                                       "null when use https");
+                assert info.url.startsWith("http");
+                E.checkArgument(info.trustStoreFile == null,
+                                "Can't set --trust-store-file when use http");
+                E.checkArgument(info.trustStorePassword == null,
+                                "Can't set --trust-store-password when use http");
                 trustStoreFile = info.trustStoreFile;
                 trustStorePassword = info.trustStorePassword;
             }
+            this.client = HugeClient.builder(info.url, info.graphSpace,
+                                             info.graph)
+                                    .configUser(info.username, info.password)
+                                    .configTimeout(info.timeout)
+                                    .configSSL(trustStoreFile,
+                                               trustStorePassword)
+                                    .build();
         } else {
-            assert info.url.startsWith("http");
-            E.checkArgument(info.trustStoreFile == null,
-                            "Can't set --trust-store-file when use http");
-            E.checkArgument(info.trustStorePassword == null,
-                            "Can't set --trust-store-password when use http");
-            trustStoreFile = info.trustStoreFile;
-            trustStorePassword = info.trustStorePassword;
+            this.createHugeClientWithMeta(info);
         }
-        this.client = HugeClient.builder(info.url, info.graphSpace, info.graph)
-                                .configUser(info.username, info.password)
-                                .configTimeout(info.timeout)
-                                .configSSL(trustStoreFile, trustStorePassword)
-                                .build();
 
         this.mapper = new ObjectMapper();
+    }
+
+    protected void createHugeClientWithMeta(ConnectionInfo info) {
+        E.checkArgument(CollectionUtils.isNotEmpty(info.metaURLs),
+                        "The endpoints can't be null, when use meta");
+        MetaHugeClientFactory.MetaDriverType type
+                = MetaHugeClientFactory.MetaDriverType.valueOf(
+                info.metaType.toUpperCase());
+        MetaHugeClientFactory factory = MetaHugeClientFactory
+                .connect(type, info.metaURLs.toArray(new String[0]),
+                         info.metaCa, info.metaClientCa,
+                         info.metaClientKey);
+        try {
+            client = factory.createAuthClient(info.cluster, info.graphSpace,
+                                              info.graph, null, info.username,
+                                              info.password);
+        } catch (RuntimeException e) {
+            throw e;
+        } finally {
+            factory.close();
+        }
     }
 
     public TraverserManager traverser() {
@@ -127,6 +160,12 @@ public class ToolClient {
     public static class ConnectionInfo {
 
         private String url;
+        private String metaType;
+        private List<String> metaURLs;
+        private String metaCa;
+        private String metaClientCa;
+        private String metaClientKey;
+        private String cluster;
         private String graphSpace;
         private String graph;
         private String username;
@@ -135,10 +174,9 @@ public class ToolClient {
         private String trustStoreFile;
         private String trustStorePassword;
 
-        public ConnectionInfo(String url, String graphSpace,
-                              String graph, String username,
-                              String password, Integer timeout,
-                              String trustStoreFile,
+        public ConnectionInfo(String url, String graphSpace, String graph,
+                              String username, String password,
+                              Integer timeout, String trustStoreFile,
                               String trustStorePassword) {
             this.url = url;
             this.graphSpace = graphSpace;
@@ -148,6 +186,24 @@ public class ToolClient {
             this.timeout = timeout;
             this.trustStoreFile = trustStoreFile;
             this.trustStorePassword = trustStorePassword;
+        }
+
+        public ConnectionInfo(String metaType, List<String> metaURLs,
+                              String metaCa, String metaClientCA,
+                              String metaClientKey, String cluster,
+                              String graphSpace, String graph, String username,
+                              String password, Integer timeout) {
+            this.metaType = metaType;
+            this.metaURLs = metaURLs;
+            this.cluster = cluster;
+            this.graphSpace = graphSpace;
+            this.graph = graph;
+            this.username = username;
+            this.password = password;
+            this.timeout = timeout;
+            this.metaCa = metaCa;
+            this.metaClientCa = metaClientCA;
+            this.metaClientKey = metaClientKey;
         }
     }
 }

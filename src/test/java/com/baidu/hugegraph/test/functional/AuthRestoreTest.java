@@ -46,7 +46,7 @@ public class AuthRestoreTest extends AuthTest {
 
     @Before
     public void init() {
-        client = HugeClient.builder(URL, GRAPH_SPACE, GRAPH)
+        client = HugeClient.builder(URL, GRAPHSPACE, GRAPH)
                            .configUser(USER_NAME, USER_PASSWORD)
                            .configTimeout(TIME_OUT)
                            .configSSL(TRUST_STORE_FILE, TRUST_STORE_PASSWORD)
@@ -62,6 +62,8 @@ public class AuthRestoreTest extends AuthTest {
         this.loadData(HugeType.ACCESS, "auth_accesses.txt");
 
         String[] args = new String[]{
+                "--url", URL,
+                "--graph", GRAPH,
                 "--throw-mode", "true",
                 "--user", USER_NAME,
                 "--password", USER_PASSWORD,
@@ -128,6 +130,8 @@ public class AuthRestoreTest extends AuthTest {
         this.loadData(HugeType.USER, "auth_users.txt");
 
         String[] args = new String[]{
+                "--url", URL,
+                "--graph", GRAPH,
                 "--throw-mode", "true",
                 "--user", USER_NAME,
                 "--password", USER_PASSWORD,
@@ -151,6 +155,8 @@ public class AuthRestoreTest extends AuthTest {
     @Test
     public void testRestoreWithoutInitPassword() {
         String[] args = new String[]{
+                "--url", URL,
+                "--graph", GRAPH,
                 "--throw-mode", "true",
                 "--user", USER_NAME,
                 "--password", USER_PASSWORD,
@@ -173,6 +179,8 @@ public class AuthRestoreTest extends AuthTest {
         this.loadData(HugeType.USER, "auth_users_conflict.txt");
 
         String[] args = new String[]{
+                "--url", URL,
+                "--graph", GRAPH,
                 "--throw-mode", "true",
                 "--user", USER_NAME,
                 "--password", USER_PASSWORD,
@@ -195,6 +203,8 @@ public class AuthRestoreTest extends AuthTest {
         this.loadData(HugeType.USER, "auth_users_conflict.txt");
 
         String[] args = new String[]{
+                "--url", URL,
+                "--graph", GRAPH,
                 "--throw-mode", "true",
                 "--user", USER_NAME,
                 "--password", USER_PASSWORD,
@@ -220,6 +230,8 @@ public class AuthRestoreTest extends AuthTest {
         String filePath = "./auth-test-test";
 
         String[] args = new String[]{
+                "--url", URL,
+                "--graph", GRAPH,
                 "--throw-mode", "true",
                 "--user", USER_NAME,
                 "--password", USER_PASSWORD,
@@ -243,6 +255,8 @@ public class AuthRestoreTest extends AuthTest {
         String filePath = "./auth-test-test";
 
         String[] args = new String[]{
+                "--url", URL,
+                "--graph", GRAPH,
                 "--throw-mode", "true",
                 "--user", USER_NAME,
                 "--password", USER_PASSWORD,
@@ -267,6 +281,8 @@ public class AuthRestoreTest extends AuthTest {
         String filePath = "./auth-test-test";
 
         String[] args = new String[]{
+                "--url", URL,
+                "--graph", GRAPH,
                 "--throw-mode", "true",
                 "--user", USER_NAME,
                 "--password", USER_PASSWORD,
@@ -291,6 +307,8 @@ public class AuthRestoreTest extends AuthTest {
         String filePath = "./auth-test-test";
 
         String[] args = new String[]{
+                "--url", URL,
+                "--graph", GRAPH,
                 "--throw-mode", "true",
                 "--user", USER_NAME,
                 "--password", USER_PASSWORD,
@@ -315,6 +333,8 @@ public class AuthRestoreTest extends AuthTest {
         String filePath = "./auth-test-test";
 
         String[] args = new String[]{
+                "--url", URL,
+                "--graph", GRAPH,
                 "--throw-mode", "true",
                 "--user", USER_NAME,
                 "--password", USER_PASSWORD,

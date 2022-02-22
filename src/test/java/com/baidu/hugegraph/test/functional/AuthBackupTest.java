@@ -38,6 +38,8 @@ public class AuthBackupTest extends AuthTest {
     @Test
     public void testAuthBackup() {
         String[] args = new String[]{
+                "--url", URL,
+                "--graph", GRAPH,
                 "--throw-mode", "true",
                 "--user", USER_NAME,
                 "--password", USER_PASSWORD,
@@ -54,6 +56,8 @@ public class AuthBackupTest extends AuthTest {
     @Test
     public void testAuthBackupByTypes() {
         String[] args = new String[]{
+                "--url", URL,
+                "--graph", GRAPH,
                 "--throw-mode", "true",
                 "--user", USER_NAME,
                 "--password", USER_PASSWORD,
@@ -71,6 +75,8 @@ public class AuthBackupTest extends AuthTest {
     @Test
     public void testAuthBackupWithWrongType() {
         String[] args = new String[]{
+                "--url", URL,
+                "--graph", GRAPH,
                 "--throw-mode", "true",
                 "--user", USER_NAME,
                 "--password", USER_PASSWORD,
@@ -91,6 +97,8 @@ public class AuthBackupTest extends AuthTest {
     public void testAuthBackupByDirectory() {
         String directory = "./backup";
         String[] args = new String[]{
+                "--url", URL,
+                "--graph", GRAPH,
                 "--throw-mode", "true",
                 "--user", USER_NAME,
                 "--password", USER_PASSWORD,
