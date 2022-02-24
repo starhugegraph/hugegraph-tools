@@ -314,7 +314,7 @@ public class HugeGraphCommand {
                 graphsManager = manager(GraphsManager.class);
                 graphsManager.create(graphCreate.name(), graphCreate.config());
                 Printer.print("[%s] Graph '%s' is created",
-                              this.graphSpace(), this.graph());
+                              this.graphSpace(), graphCreate.name());
                 break;
             case "graph-list":
                 graphsManager = manager(GraphsManager.class);
