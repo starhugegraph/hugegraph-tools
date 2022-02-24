@@ -244,6 +244,7 @@ public class HugeGraphCommand {
 
                 // Restore source graph to target graph
                 this.url(migrate.targetUrl());
+                this.graphSpace(migrate.targetGraphSpace());
                 this.graph(migrate.targetGraph());
                 this.username(migrate.targetUsername());
                 this.password(migrate.targetPassword());
