@@ -283,6 +283,10 @@ public class SubCommands {
                    description = "The url of target graph to migrate")
         public String targetUrl = "http://127.0.0.1:8081";
 
+        @Parameter(names = {"--target-space"}, arity = 1,
+                   description = "The name of target graph space to migrate")
+        public String targetGraphSpace = "DEFAULT";
+
         @Parameter(names = {"--target-graph"}, arity = 1,
                    description = "The name of target graph to migrate")
         public String targetGraph = "hugegraph";
@@ -339,6 +343,10 @@ public class SubCommands {
 
         public String targetUrl() {
             return this.targetUrl;
+        }
+
+        public String targetGraphSpace() {
+            return this.targetGraphSpace;
         }
 
         public String targetGraph() {
