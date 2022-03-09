@@ -34,7 +34,7 @@ import com.baidu.hugegraph.driver.SchemaManager;
 import com.baidu.hugegraph.driver.TaskManager;
 import com.baidu.hugegraph.driver.TraverserManager;
 import com.baidu.hugegraph.util.E;
-import com.baidu.hugegraph.driver.factory.MetaHugeClientFactory;
+import com.baidu.hugegraph.driver.factory.PDHugeClientFactory;
 
 public class ToolClient {
 
@@ -91,15 +91,10 @@ public class ToolClient {
     }
 
     protected void createHugeClientWithMeta(ConnectionInfo info) {
-        E.checkArgument(CollectionUtils.isNotEmpty(info.metaURLs),
-                        "The endpoints can't be null, when use meta");
-        MetaHugeClientFactory.MetaDriverType type
-                = MetaHugeClientFactory.MetaDriverType.valueOf(
-                info.metaType.toUpperCase());
-        MetaHugeClientFactory factory = MetaHugeClientFactory
-                .connect(type, info.metaURLs.toArray(new String[0]),
-                         info.metaCa, info.metaClientCa,
-                         info.metaClientKey);
+        E.checkArgument(StringUtils.isNotEmpty(info.pdPeers),
+                        "The pd peers address can't be null, when use pd");
+        PDHugeClientFactory factory = new PDHugeClientFactory(info.pdPeers,
+                                                               info.routeType);
         try {
             client = factory.createAuthClient(info.cluster, info.graphSpace,
                                               info.graph, null, info.username,
@@ -160,11 +155,8 @@ public class ToolClient {
     public static class ConnectionInfo {
 
         private String url;
-        private String metaType;
-        private List<String> metaURLs;
-        private String metaCa;
-        private String metaClientCa;
-        private String metaClientKey;
+        private String pdPeers;
+        private String routeType;
         private String cluster;
         private String graphSpace;
         private String graph;
@@ -188,22 +180,17 @@ public class ToolClient {
             this.trustStorePassword = trustStorePassword;
         }
 
-        public ConnectionInfo(String metaType, List<String> metaURLs,
-                              String metaCa, String metaClientCA,
-                              String metaClientKey, String cluster,
+        public ConnectionInfo(String pdPeers, String routeType, String cluster,
                               String graphSpace, String graph, String username,
                               String password, Integer timeout) {
-            this.metaType = metaType;
-            this.metaURLs = metaURLs;
+            this.pdPeers = pdPeers;
+            this.routeType = routeType;
             this.cluster = cluster;
             this.graphSpace = graphSpace;
             this.graph = graph;
             this.username = username;
             this.password = password;
             this.timeout = timeout;
-            this.metaCa = metaCa;
-            this.metaClientCa = metaClientCA;
-            this.metaClientKey = metaClientKey;
         }
     }
 }

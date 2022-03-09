@@ -685,27 +685,16 @@ public class SubCommands {
     }
     public static class MetaInfo {
 
-        @Parameter(names = {"--meta-type"}, arity = 1,
-                description = "type of meta")
-        public String metaType = "etcd";
+        @Parameter(names = {"--pd-peers"}, arity = 1,
+                description = "address of pd")
+        public String pdPeers = "127.0.0.1:8686";
 
-        @Parameter(names = {"--meta-urls"}, required = false,
-                listConverter = StringListConverter.class,
-                description = "The meta url")
-        public List<String> metaURLs = Arrays.asList(new String[]{"http" +
-                "://127.0.0.1:2379"});
+        @Parameter(names = {"--route-type"}, arity = 1,
+                validateWith = {RouteTypeValidator.class},
+                description = "used to select service url, ['BOTH', " +
+                        "'NODE_PORT', 'DDS']")
+        public String routeType = "NODE_PORT";
 
-        @Parameter(names = {"--meta-ca"}, required = false, arity = 1,
-                description = "meta ca file")
-        public String metaCa;
-
-        @Parameter(names = {"--meta-client-ca"}, required = false, arity = 1,
-                description = "meta client ca file")
-        public String metaClientCa;
-
-        @Parameter(names = {"--meta-client-key"}, required = false, arity = 1,
-                description = "meta client key file (pkcs8)")
-        public String metaClientKey;
     }
 
     public static class Graph {
@@ -1208,6 +1197,22 @@ public class SubCommands {
                 throw new ParameterException(String.format(
                           "Invalid --format '%s', valid value is %s",
                           value, FORMATS));
+            }
+        }
+    }
+
+    public static class RouteTypeValidator implements IParameterValidator {
+
+        private static final Set<String> ROUTETYPES = ImmutableSet.of(
+                "BOTH", "NODE_PORT", "DDS"
+        );
+
+        @Override
+        public void validate(String name, String value) {
+            if (!ROUTETYPES.contains(value.toUpperCase())) {
+                throw new ParameterException(String.format(
+                        "Invalid --route-type '%s', valid value is %s",
+                        value, ROUTETYPES));
             }
         }
     }

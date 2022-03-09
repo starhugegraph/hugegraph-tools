@@ -115,20 +115,20 @@ public class HugeGraphCommand {
         this.url.url = url;
     }
 
-    public String metaType() {
-        return this.metaInfo.metaType;
+    public String pdPeers() {
+        return this.metaInfo.pdPeers;
     }
 
-    public void metaType(String metaType) {
-        this.metaInfo.metaType = metaType;
+    public void metaType(String pdPeers) {
+        this.metaInfo.pdPeers = pdPeers;
     }
 
-    public List<String> metaURLs() {
-        return metaInfo.metaURLs;
+    public String routeType() {
+        return metaInfo.routeType;
     }
 
-    public void metaURLs(List<String> urls) {
-        metaInfo.metaURLs = urls;
+    public void routeType(String routeType) {
+        metaInfo.routeType= routeType;
     }
 
     public String cluster() {
@@ -484,11 +484,8 @@ public class HugeGraphCommand {
                                           this.trustStoreFile(),
                                           this.trustStorePassword());
             } else {
-                info = new ConnectionInfo(this.metaInfo.metaType,
-                                          this.metaInfo.metaURLs,
-                                          this.metaInfo.metaCa,
-                                          this.metaInfo.metaClientCa,
-                                          this.metaInfo.metaClientKey,
+                info = new ConnectionInfo(this.metaInfo.pdPeers,
+                                          this.metaInfo.routeType,
                                           this.cluster(),
                                           this.graphSpace(),
                                           this.graph(),
